@@ -1,14 +1,13 @@
-use crate::types::NFT;
+use crate::state::NFTState;
 
-pub fn transfer_nft(nft: &mut NFT, new_owner: String, nullifier: Option<String>) {
-    if let Some(n) = nullifier {
-        store_nullifier(&n);
+pub fn transfer_nft(state: &mut NFTState, nft_id: &str, new_owner: &str) -> Result<(), String> {
+    if let Some(nft) = state.get_nft_mut(nft_id) {
+        if nft.staking_locked {
+            return Err("NFT is locked in staking".to_string());
+        }
+        nft.owner = new_owner.to_string();
+        Ok(())
+    } else {
+        Err("NFT not found".to_string())
     }
-
-    nft.owner = new_owner;
-}
-
-fn store_nullifier(nullifier: &str) {
-    // Store nullifier to track that this NFT has been used
-    println!("Storing nullifier: {}", nullifier);
 }
