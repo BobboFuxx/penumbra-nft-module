@@ -1,6 +1,4 @@
-use crate::types::NFT;
-
-pub fn prepare_ibc_packet(nft: &NFT) -> Vec<u8> {
-    // Placeholder serialization
-    bincode::serialize(nft).unwrap()
+// IBC transfer logic (simplified)
+pub fn transfer_nft_via_ibc(nft_id: &str, recipient: &str) {
+    println!("Transferring NFT {} to {} via IBC.", nft_id, recipient);
 }
