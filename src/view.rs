@@ -1,16 +1,14 @@
-use crate::types::{NFT, NFTMetadata};
+use crate::types::NFT;
 
-pub fn view_metadata(nft: &NFT, viewing_key: Option<&str>) -> Option<NFTMetadata> {
-    if let Some(_key) = viewing_key {
-        // Decrypt logic placeholder
-        Some(NFTMetadata {
-            name: "Example".to_string(),
-            description: "An NFT on Penumbra".to_string(),
-            image_cid: "bafy...".to_string(),
-            attributes: "{}".to_string(),
-            shielded: true,
-        })
-    } else {
-        None
+pub fn transfer_nft(nft: &mut NFT, new_owner: String, nullifier: Option<String>) {
+    if let Some(n) = nullifier {
+        store_nullifier(&n);
     }
+
+    nft.owner = new_owner;
+}
+
+fn store_nullifier(nullifier: &str) {
+    // Store nullifier to track that this NFT has been used
+    println!("Storing nullifier: {}", nullifier);
 }
