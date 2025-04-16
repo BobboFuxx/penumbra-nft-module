@@ -1,19 +1,14 @@
-use serde::{Deserialize, Serialize};
+use crate::types::{NFTMetadata, NFT};
+use crate::mint::mint_nft;
+use crate::utils::{hash_metadata_commitment, generate_nft_id};
 
-#[derive(Clone, Serialize, Deserialize)]
-pub struct NFTMetadata {
-    pub name: String,
-    pub description: String,
-    pub image_cid: String,
-    pub attributes: String,
-    pub shielded: bool,
+pub fn create_nft(owner: String, metadata: NFTMetadata) -> NFT {
+    let commitment = hash_metadata_commitment(&metadata);
+    let id = generate_nft_id();
+    mint_nft(owner, metadata)
 }
 
-#[derive(Clone, Serialize, Deserialize)]
-pub struct NFT {
-    pub id: String,
-    pub owner: String,
-    pub metadata_commitment: String,
-    pub royalty_percentage: Option<u8>,
-    pub staking_locked: bool,
+pub fn update_nft_metadata(nft: &mut NFT, new_metadata: NFTMetadata) {
+    let new_commitment = hash_metadata_commitment(&new_metadata);
+    nft.metadata_commitment = new_commitment;
 }
