@@ -1,9 +1,8 @@
+// Airdrop logic (this can be extended)
 use crate::types::NFT;
 
-pub fn airdrop(nft: &NFT, recipients: Vec<String>) -> Vec<NFT> {
-    recipients.into_iter().map(|addr| {
-        let mut copy = nft.clone();
-        copy.owner = addr;
-        copy
-    }).collect()
+pub fn airdrop_nfts(nfts: Vec<NFT>, recipient: String) {
+    for nft in nfts {
+        println!("Airdropping NFT {} to {}", nft.id, recipient);
+    }
 }
