@@ -1,31 +1,26 @@
-use crate::types::{NFTMetadata, NFT};
-use crate::utils::{hash_metadata_commitment, generate_nft_id};
-use snarkjs::{groth16, Circuit, FieldElement};
+use crate::{
+    types::{NFT, NFTMetadata},
+    utils::{generate_nft_id, hash_metadata_commitment},
+    state::NFTState,
+};
 
-pub fn generate_metadata_commitment_proof(metadata: &NFTMetadata) -> String {
-    let name_hash = hash_metadata_commitment(&metadata.name);
-    let desc_hash = hash_metadata_commitment(&metadata.description);
-    let image_cid_hash = hash_metadata_commitment(&metadata.image_cid);
-    let attr_hash = hash_metadata_commitment(&metadata.attributes);
-
-    let proof = groth16::generate_proof(
-        &Circuit::load("metadata_commitment.circom"), 
-        &[FieldElement::from(name_hash), FieldElement::from(desc_hash), FieldElement::from(image_cid_hash), FieldElement::from(attr_hash)]
-    ).unwrap();
-
-    proof.to_hex()
-}
-
-pub fn mint_nft(owner: String, metadata: NFTMetadata) -> NFT {
-    let commitment = hash_metadata_commitment(&metadata);
-    let proof = generate_metadata_commitment_proof(&metadata);
+pub fn mint_nft(
+    state: &mut NFTState,
+    owner: String,
+    metadata: NFTMetadata,
+    royalty_percentage: Option<u8>,
+) -> String {
     let id = generate_nft_id();
+    let commitment = hash_metadata_commitment(&metadata);
 
-    NFT {
-        id,
+    let nft = NFT {
+        id: id.clone(),
         owner,
         metadata_commitment: commitment,
-        royalty_percentage: None,
+        royalty_percentage,
         staking_locked: false,
-    }
+    };
+
+    state.add_nft(nft);
+    id
 }
