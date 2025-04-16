@@ -9,3 +9,6 @@ pub mod ibc;
 pub mod circuit;
 pub mod types;
 pub mod utils;
+
+#[cfg(test)]
+mod tests;
