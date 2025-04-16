@@ -1,4 +1,6 @@
-#[derive(Clone)]
+use serde::{Deserialize, Serialize};
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct NFTMetadata {
     pub name: String,
     pub description: String,
@@ -7,7 +9,7 @@ pub struct NFTMetadata {
     pub shielded: bool,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct NFT {
     pub id: String,
     pub owner: String,
